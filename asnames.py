@@ -23,12 +23,19 @@ import zlib
 def getGeoffASNs(outfile):
     """Get Geoff Huston's list of AS numbers, names and descriptons
     """
-    """ If outfile is defined, write original html there
+    """ If outfile is defined, copy the original data there
     """
 
-    # <a href="/cgi-bin/as-report?as=AS4&view=2.0">AS4    </a> ISI-AS - University of Southern California, US
     asns={}
+
     asnrecord = re.compile("^(\d+)\s+(\S.*)$")
+
+    # Example records from asn.txt, to be matched by above regex:
+    #
+    # 12833   GIGAPIX GigaPix - Portuguese Internet eXchange, PT
+    # 13005   C2INTERNET ******************************************************, GB
+    # 13018   , IT
+
 
     if outfile:
         o = open(outfile, 'w')
