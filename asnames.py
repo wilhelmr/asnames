@@ -11,6 +11,12 @@
 # This script restores the old situation by following the references
 # to organisation objects and extract the AS holders organisation names
 # from there.
+#
+# Usage: asnames.py [-s] [-o outputfile]
+#
+# Default output is to a file named 'asn.txt' in the working directory
+# With the -s (store) option the original records from cidr-report's
+# asn.txt are stored in <outputfile>.orig
 
 import argparse
 import calendar
@@ -134,8 +140,6 @@ def getRIPEDBASNs():
                         # trailing comment could introduce more than one token 
                         org = re.match('^(\S+)\s+.*$',org).group(1)
                     asns[autnum]['org'] = org.upper()
-                else:
-                        print "no org: in object? -", autnum
         elif object[0] != '#' and object[0] != '%':
             print "no aut-num in object? - >>",object,"<<", obj
     return(asns)
@@ -159,12 +163,27 @@ def getRIPEDBOrgNames():
 
 def main():
 
-    geoffASNs = getGeoffASNs("autnums.orig.txt")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o','--outputfile', help="where to store the output, default 'asn.txt''",default='asn.txt')
+    parser.add_argument('-s','--store', help="store the original in <output>.orig",action="store_true",default=False)
+
+    args = parser.parse_args()
+
+
+    outfile = args.outputfile
+
+    if args.store:
+	orig = outfile + '.orig'
+    else:
+        orig = ''
+	
+
+    geoffASNs = getGeoffASNs(orig)
     ripedbASNs = getRIPEDBASNs()
     delegatedASNs = getRIPENCCASNs()
     organisations = getRIPEDBOrgNames()
 
-    new = open('autnums.new.txt','w')
+    new = open(outfile,'w')
     for asn in sorted(geoffASNs.keys(), key=lambda asn: int(asn[2:len(asn)])):
         if asn in ripedbASNs:
             try:

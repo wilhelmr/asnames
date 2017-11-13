@@ -11,3 +11,8 @@ See: https://www.ripe.net/ripe/mail/archives/ncc-announce/2016-June/001051.html
 This script restores the old behaviour as it follows the references
 to organisation objects and from those extracts the AS holders' organisation names.
 
+Usage: asnames.py [-s] [-o outputfile]
+
+Default output is to a file named 'asn.txt' in the working directory.
+With the -s (store) option the original records from cidr-report's
+asn.txt are stored in <outputfile>.orig
