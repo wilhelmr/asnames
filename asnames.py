@@ -20,6 +20,7 @@
 
 import argparse
 import calendar
+import os
 import re
 import sys
 import urllib2
@@ -183,7 +184,8 @@ def main():
     delegatedASNs = getRIPENCCASNs()
     organisations = getRIPEDBOrgNames()
 
-    new = open(outfile,'w')
+    tempfile = outfile + str(os.getpid())
+    new = open(tempfile,'w')
     for asn in sorted(geoffASNs.keys(), key=lambda asn: int(asn[2:len(asn)])):
         if asn in ripedbASNs:
             try:
@@ -202,5 +204,6 @@ def main():
             new.write("%s\t%s\n" % (asn[2:len(asn)], geoffASNs[asn]))
 
     new.close()
+    os.rename(tempfile,outfile)
 
 main()
